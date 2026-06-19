@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PR Burguer na Brasa - Cardápio Digital</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #0b0b0b;
+            color: #e0e0e0;
+            padding-bottom: 100px;
+        }
+
+        /* iFood Header Style */
+        .merchant-cover {
+            height: 140px;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjFMPZdTHRzkRixX-NAJzjmrUrkrxaoVfgWDfD17VF6-gQ3i83-lSgFMcAkNLCng1geD0qdK59AaeMvLJtDRdeSqPGLKxWfyPGtq67onY95aOnUGoedQKehiremi_o7LD8MFtMNI24Rxf4Ij84Edn1cDh4c63VRdraYuAn03n5sFVNw6Jp-YxKXCOleV-A/s1600/37172.png') no-repeat center center;
+            background-size: cover;
+        }
+
+        .merchant-header {
+            background-color: #121212;
+            padding: 16px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border-bottom: 1px solid #c5a85c;
+        }
+
+        .merchant-logo {
+            width: 90px;
+            height: 90px;
+            background-color: #121212;
+            border-radius: 50%;
+            border: 3px solid #c5a85c;
+            position: absolute;
+            top: -55px;
+            left: 50%;
+            transform: translateX(-50%);
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .merchant-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .merchant-info {
+            margin-top: 45px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .merchant-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #c5a85c;
+            margin-bottom: 6px;
+        }
+
+        .merchant-details {
+            font-size: 0.85rem;
+            color: #aaaaaa;
+            line-height: 1.5;
+        }
+
+        .merchant-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        .merchant-status.open {
+            color: #2ec4b6;
+        }
+
+        .merchant-status.open::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background-color: #2ec4b6;
+            border-radius: 50%;
+        }
+
+        /* iFood Categories Bar */
+        .categories-nav {
+            background-color: #121212;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            border-bottom: 1px solid #262626;
+            box-shadow: 0 4px 6px -4px rgba(0,0,0,0.5);
+        }
+
+        .categories-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tab {
+            white-space: nowrap;
+            padding: 8px 16px;
+            background-color: #222222;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #aaaaaa;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .category-tab:hover, .category-tab.active {
+            background-color: #1a1712;
+            color: #c5a85c;
+            font-weight: 600;
+            border-color: #c5a85c;
+        }
+
+        /* Container & Grid */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 12px 16px;
+        }
+
+        .category-section {
+            scroll-margin-top: 70px;
+            margin-bottom: 24px;
+        }
+
+        .category-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #c5a85c;
+            margin: 16px 0;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        /* iFood Product Card Style */
+        .product-card {
+            background-color: #121212;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid #222222;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+
+        .product-card:not(.unavailable):hover {
+            box-shadow: 0 2px 8px rgba(197, 168, 92, 0.2);
+            border-color: #c5a85c;
+        }
+
+        .product-card:not(.unavailable):active {
+            transform: scale(0.99);
+        }
+
+        .product-card.unavailable {
+            background-color: #161616;
+            border-color: #222222;
+            cursor: not-allowed;
+        }
+
+        .unavailable-badge {
+            position: absolute;
+            background-color: #444444;
+            color: #bbbbbb;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 4px;
+            top: 12px;
+            right: 12px;
+            z-index: 2;
+        }
+
+        .product-info-left {
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .product-desc {
+            font-size: 0.85rem;
+            color: #aaaaaa;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #c5a85c;
+        }
+
+        /* Imagem do Produto no Card */
+        .product-image-right {
+            width: 90px;
+            height: 90px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background-color: #222222;
+        }
+
+        .product-image-right img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-card.unavailable .product-image-right img {
+            filter: grayscale(1) opacity(0.3);
+        }
+
+        /* iFood Floating Cart Bar */
+        .cart-float {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #121212;
+            border-top: 1px solid #c5a85c;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            z-index: 999;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.6);
+        }
+
+        .cart-info-text {
+            color: #ffffff;
+        }
+
+        .cart-info-text span {
+            background-color: #c5a85c;
+            color: #000000;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-right: 4px;
+        }
+
+        .btn-view-cart {
+            background-color: #c5a85c;
+            color: #000000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-view-cart:hover {
+            background-color: #e2c478;
+        }
+
+        /* Modal View Like iFood */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        @media(min-width: 600px) {
+            .modal {
+                align-items: center;
+                padding: 20px;
+            }
+        }
+
+        .modal-content {
+            background-color: #121212;
+            border-radius: 16px 16px 0 0;
+            width: 100%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px 20px;
+            border-top: 2px solid #c5a85c;
+        }
+
+        @media(min-width: 600px) {
+            .modal-content {
+                border-radius: 12px;
+                border: 1px solid #c5a85c;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #222222;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #c5a85c;
+        }
+
+        .close-modal {
+            color: #c5a85c;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .modal-banner-image {
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-bottom: 16px;
+            background-color: #222222;
+        }
+
+        .details-desc {
+            font-size: 1rem;
+            color: #aaaaaa;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .details-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #c5a85c;
+            margin-bottom: 20px;
+        }
+
+        .cart-category-group {
+            margin-bottom: 16px;
+            border-bottom: 1px solid #222222;
+            padding-bottom: 8px;
+        }
+
+        .cart-category-name {
+            color: #777777;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .cart-item-info h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+
+        .cart-item-info span {
+            color: #c5a85c;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #333333;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background-color: #1a1a1a;
+        }
+
+        .btn-qty {
+            background: none;
+            color: #c5a85c;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            font-weight: bold;
+            width: 24px;
+            height: 24px;
+        }
+
+        .form-group {
+            margin-top: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #aaaaaa;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px;
+            background-color: #1a1a1a;
+            border: 1px solid #333333;
+            color: #ffffff;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #c5a85c;
+        }
+
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .payment-btn {
+            background-color: #1a1a1a;
+            border: 1px solid #333333;
+            padding: 10px;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #aaaaaa;
+            transition: 0.2s;
+        }
+
+        .payment-btn.selected {
+            border-color: #c5a85c;
+            background-color: #231f16;
+            color: #c5a85c;
+        }
+
+        .change-container {
+            margin-top: 12px;
+            background-color: #161616;
+            border: 1px dashed #333333;
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .change-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 8px;
+        }
+
+        .change-options label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            color: #e0e0e0;
+        }
+
+        .cart-summary-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            color: #aaaaaa;
+            margin-top: 8px;
+        }
+
+        .cart-total-section {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #222222;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #c5a85c;
+        }
+
+        .btn-checkout {
+            background-color: #c5a85c;
+            color: #000000;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-checkout:hover {
+            background-color: #e2c478;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="merchant-cover"></div>
+
+    <header class="merchant-header">
+        <div class="merchant-logo">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhaoxWTchi8nzSf47J2w35nWvTwbJlh1GNienqGHXIEOLHiahJaiuH38CHvOB2sfC5X6vHd8I0lv2AEesQEflJGBzt-ZUEJdhBBZKCfbOZOXxD5qKzPNXkzE0N_SxAGYPvvF_wBptSndBSrK8pQoLPGaGy-oMBirwIRL0g04HZXr-qBhdyAIUvcoOdxoL8/s1600/35659.jpg" alt="Logo PR Burguer na Brasa">
+        </div>
+        <div class="merchant-info">
+            <h1 class="merchant-name">PR Burguer na Brasa</h1>
+            <div class="merchant-details">
+                <p>Burguers • Jardim Santa Clara (Nova Veneza) - Sumaré, SP</p>
+                <p>Sábado e Domingo: 19h às 22h30 • Telefone: (19) 92012-4303</p>
+            </div>
+            <div class="merchant-status open" id="storeStatus">Faça seu pedido</div>
+        </div>
+    </header>
+
+    <nav class="categories-nav">
+        <a href="#hamburgueres" class="category-tab active" onclick="setActiveTab(this)">Hambúrgueres</a>
+        <a href="#combos" class="category-tab" onclick="setActiveTab(this)">Combos</a>
+        <a href="#refri" class="category-tab" onclick="setActiveTab(this)">Refri</a>
+    </nav>
+
+    <div class="container">
+        
+        <section id="hamburgueres" class="category-section">
+            <h3 class="category-title">Hambúrgueres</h3>
+            <div class="menu-grid">
+                
+                <div class="product-card" onclick="openProductDetails('X Bacon', 'Pão de brioche, molho especial PR, gourmet de 160g, Queijo cheddar, bacon crocante, alface, tomate, maionese Grill PR.', 31.90, 'Hambúrgueres', 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEimaPPuem_86AekvEwZPlVhPzSMChrvs9kA63SMbe0mrNuP6bC8B1mPryrefQOHViQDDNgdvl-BMORhrqncsZNcjcbgiTzoFbMH7iaqzsc4cQ4sOAqShA-74JhPfSnB0Fzc23R7bHhjSsO0uBZeIGy2L-v_EoB35mMYjl4y6Wk4gHD352JMY3VBcGbizb4/s1600/35693.jpg')">
+                    <div class="product-info-left">
+                        <div class="product-name">X Bacon</div>
+                        <div class="product-desc">Pão de brioche, molho especial PR, gourmet de 160g, Queijo cheddar, bacon crocante, alface, tomate, maionese Grill PR.</div>
+                        <div class="product-price">R$ 31,90</div>
+                    </div>
+                    <div class="product-image-right">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEimaPPuem_86AekvEwZPlVhPzSMChrvs9kA63SMbe0mrNuP6bC8B1mPryrefQOHViQDDNgdvl-BMORhrqncsZNcjcbgiTzoFbMH7iaqzsc4cQ4sOAqShA-74JhPfSnB0Fzc23R7bHhjSsO0uBZeIGy2L-v_EoB35mMYjl4y6Wk4gHD352JMY3VBcGbizb4/s1600/35693.jpg" alt="X Bacon">
+                    </div>
+                </div>
+
+                <div class="product-card unavailable">
+                    <span class="unavailable-badge">Esgotado</span>
+                    <div class="product-info-left">
+                        <div class="product-name" style="color:#555;">Smash Bacon</div>
+                        <div class="product-desc" style="color:#555;">Pão de brioche, maionese Grill PR, 3 Smash 70g, 6 fatias de cheddar, bacon em fatias crocante, Barbecue defumado PR.</div>
+                        <div class="product-price" style="color:#555;">R$ 35,90</div>
+                    </div>
+                    <div class="product-image-right">
+                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500" alt="Smash Bacon">
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openProductDetails('X PR Burguer na Brasa', 'Pão de brioche, molho especial PR, 2 gourmet 160g, queijo cheddar em dobro, bacon crocante em dobro, alface, tomate, cebola caramelizada, maionese Grill PR.', 42.90, 'Hambúrgueres', 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjxrLNBwQw75mTcWlJVP3dbk5itBr2K7EWqpHO6abAVtgFhiKz16rvb36VaTN4YQZc8FVBgsN_vfiPHV6yMNk7gUp-fA-4VHAx6kwtl0-QpBRZkvdqHVUGtfd2zTB1hOUCpNUcmE5GS4Sgnn_ncZyvj8vseCYHQTgsy8HetQJt7d3jyjbuuOCjKIFz27lQ/s1600/35695.jpg')">
+                    <div class="product-info-left">
+                        <div class="product-name">X PR Burguer na Brasa</div>
+                        <div class="product-desc">Pão de brioche, molho especial PR, 2 gourmet 160g, queijo cheddar em dobro, bacon crocante em dobro, alface, tomate, cebola caramelizada, maionese Grill PR.</div>
+                        <div class="product-price">R$ 42,90</div>
+                    </div>
+                    <div class="product-image-right">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjxrLNBwQw75mTcWlJVP3dbk5itBr2K7EWqpHO6abAVtgFhiKz16rvb36VaTN4YQZc8FVBgsN_vfiPHV6yMNk7gUp-fA-4VHAx6kwtl0-QpBRZkvdqHVUGtfd2zTB1hOUCpNUcmE5GS4Sgnn_ncZyvj8vseCYHQTgsy8HetQJt7d3jyjbuuOCjKIFz27lQ/s1600/35695.jpg" alt="X PR Burguer na Brasa">
+                    </div>
+                </div>
+
+                <!-- Link do X Salada totalmente corrigido aqui -->
+                <div class="product-card" onclick="openProductDetails('X Salada', 'Pão de brioche, molho especial PR, alface, tomate, gourmet 160g, baconese PR.', 25.90, 'Hambúrgueres', 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhp8hjuqOUpUHcU3Pavq6BAVEGbh5OMz0BMy2zEWhZ_3vyLRCLuC_abD4rrpY7KMhcURmJMkcxiBavYkAUShDgeD5xM4qnkq54qb3EeDhv1yyxp1kW2eoV78vDs-3Epfw_6DX6rtC4AtveyzV1DYdTuRJP9D5JEAAth0i5pQm3TJJse0MnxPMGyg8Jm_Lo/s1600/35697.jpg')">
+                    <div class="product-info-left">
+                        <div class="product-name">X Salada</div>
+                        <div class="product-desc">Pão de brioche, molho especial PR, alface, tomate, gourmet 160g, baconese PR.</div>
+                        <div class="product-price">R$ 25,90</div>
+                    </div>
+                    <div class="product-image-right">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhp8hjuqOUpUHcU3Pavq6BAVEGbh5OMz0BMy2zEWhZ_3vyLRCLuC_abD4rrpY7KMhcURmJMkcxiBavYkAUShDgeD5xM4qnkq54qb3EeDhv1yyxp1kW2eoV78vDs-3Epfw_6DX6rtC4AtveyzV1DYdTuRJP9D5JEAAth0i5pQm3TJJse0MnxPMGyg8Jm_Lo/s1600/35697.jpg" alt="X Salada">
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openProductDetails('X Especial da Casa', 'Pão de brioche, maionese Grill PR, gourmet 160g, cebola caramelizada, catupiry original.', 32.90, 'Hambúrgueres', 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiWQHc53V-eDdItARzeWwgqSIrCPba1ZWSH-74rTKpGEVct9hdZ37J2jPIw7UzeO94NUb3F0hdqDXUm3Rb99wfHXs8y0lHNjvwEzqkFQNahpDrd82VXuGm4BbVY8f0CTapRrsyF1D0iAH8n_WY8TgGpwq0kiuEZkfGmpOdFGJVWetq66NaqniatYuDii2I/s1600/35699.jpg')">
+                    <div class="product-info-left">
+                        <div class="product-name">X Especial da Casa</div>
+                        <div class="product-desc">Pão de brioche, maionese Grill PR, gourmet 160g, cebola caramelizada, catupiry original.</div>
+                        <div class="product-price">R$ 32,90</div>
+                    </div>
+                    <div class="product-image-right">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiWQHc53V-eDdItARzeWwgqSIrCPba1ZWSH-74rTKpGEVct9hdZ37J2jPIw7UzeO94NUb3F0hdqDXUm3Rb99wfHXs8y0lHNjvwEzqkFQNahpDrd82VXuGm4BbVY8f0CTapRrsyF1D0iAH8n_WY8TgGpwq0kiuEZkfGmpOdFGJVWetq66NaqniatYuDii2I/s1600/35699.jpg" alt="X Especial da Casa">
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openProductDetails('X-PR Fit Vegan', 'Pão brioche, molho especial PR, alface, tomate, omelete temperado, maionese Grill.', 26.90, 'Hambúrgueres', 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgaq7wjPfMCMFSv3xxx_g0F2n2bQ76bNoeJ5Pl2cDbX-8hAqc8b9ydHs4lF3m6sNzCN0hhFL7_misgoMfodTPWQiEoAJTisVKXorU85fhNvX0tb-5Y_fE5_zOD-S1R1lZACBuMNg6MJr-F_gQtRfnA-Wn2v2KW7Y2i-kBIsU8W-a8mTjy_oHMA299kCmF4/s1600/35701.jpg')">
+                    <div class="product-info-left">
+                        <div class="product-name">X-PR Fit Vegan</div>
+                        <div class="product-desc">Pão brioche, molho especial PR, alface, tomate, omelete temperado, maionese Grill.</div>
+                        <div class="product-price">R$ 26,90</div>
+                    </div>
+                    <div class="product-image-right">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgaq7wjPfMCMFSv3xxx_g0F2n2bQ76bNoeJ5Pl2cDbX-8hAqc8b9ydHs4lF3m6sNzCN0hhFL7_misgoMfodTPWQiEoAJTisVKXorU85fhNvX0tb-5Y_fE5_zOD-S1R1lZACBuMNg6MJr-F_gQtRfnA-Wn2v2KW7Y2i-kBIsU8W-a8mTjy_oHMA299kCmF4/s1600/35701.jpg" alt="X-PR Fit Vegan">
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openProductDetails('PR Coalho', 'Pão brioche, Alface americana, Burguer artesanal de 160g, 2 fatias de queijo cheddar, Geleia de pimenta, 1 fatia generosa de queijo coalho grelhado, Bacon em fatias.', 36.90, 'Hambúrgueres', 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgEkEPag3PnS_0jNxql4kSUXito2di0x0AOn6oaqiWGencNAFsPvwTLfbiSTyaWgRtwaARTw1WQHz9Vc_ng11D_IgLqtpMoYsaZN7C3B787tSO77tuhFCRDKKBR0UdlT9sNCwmCt8XPbzsAfvcUN3HeQXscIBLhuuMcS20XvKyskWpg813mC6Gi8_uTV-o/s1600/35703.jpg')">
+                    <div class="product-info-left">
+                        <div class="product-name">PR Coalho</div>
+                        <div class="product-desc">Pão brioche, Alface americana, Burguer artesanal de 160g, 2 fatias de queijo cheddar, Geleia de pimenta, 1 fatia generosa de queijo coalho grelhado, Bacon em fatias.</div>
+                        <div class="product-price">R$ 36,90</div>
+                    </div>
+                    <div class="product-image-right">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgEkEPag3PnS_0jNxql4kSUXito2di0x0AOn6oaqiWGencNAFsPvwTLfbiSTyaWgRtwaARTw1WQHz9Vc_ng11D_IgLqtpMoYsaZN7C3B787tSO77tuhFCRDKKBR0UdlT9sNCwmCt8XPbzsAfvcUN3HeQXscIBLhuuMcS20XvKyskWpg813mC6Gi8_uTV-o/s1600/35703.jpg" alt="PR Coalho">
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openProductDetails('PR Burguer', 'Pão brioche, queijo, carne 160g e molho. Tradicional e saboroso feito na brasa pura.', 23.90, 'Hambúrgueres', 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgXP5ZK8gXh_TAiQ_OrJUq6mt0d7t4LT-guvukTKNox03gxQeXY1GKsXrbUKWsPGX6somiWHx4-QTPonm7CfDs1LrwmZ-t19EMe_7rukF5WoU_QJKl3DaVaTjfY7abkRW9Woz0RLPkYLCfy-8mp3TEb01czkFWZEBbdbM_DwcR-c-ygY40kdYJXb5xUs20/s1600/35705.jpg')">
+                    <div class="product-info-left">
+                        <div class="product-name">PR Burguer</div>
+                        <div class="product-desc">Pão brioche, queijo, carne 160g e molho. Tradicional e saboroso feito na brasa pura.</div>
+                        <div class="product-price">R$ 23,90</div>
+                    </div>
+                    <div class="product-image-right">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgXP5ZK8gXh_TAiQ_OrJUq6mt0d7t4LT-guvukTKNox03gxQeXY1GKsXrbUKWsPGX6somiWHx4-QTPonm7CfDs1LrwmZ-t19EMe_7rukF5WoU_QJKl3DaVaTjfY7abkRW9Woz0RLPkYLCfy-8mp3TEb01czkFWZEBbdbM_DwcR-c-ygY40kdYJXb5xUs20/s1600/35705.jpg" alt="PR Burguer">
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openProductDetails('Lanche da Copa', 'Edição especial e limitada! Hambúrguer artesanal robusto com acompanhamentos selecionados.', 37.90, 'Hambúrgueres', 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi5LXfdqT0FJZMzxWDkI6bGx7HxouEd9qgPOzzZQO4qAq1IUhc107PwnQN8ojrWpAp_CqfLtWNrlPClCuPyN6vCe_swUKOHlgmND_-Zl1GpPZ8A1OxndFAo78zxrRKKf5gfAwEKieLfMilNVRiyk6aHQnc4ypZygtjLDj_dtD6wCRHlPccUMGLv05fqywk/s1600/35709.jpg')">
+                    <div class="product-info-left">
+                        <div class="product-name">Lanche da Copa</div>
+                        <div class="product-desc">Edição especial e limitada! Hambúrguer artesanal robusto com acompanhamentos selecionados.</div>
+                        <div class="product-price">R$ 37,90</div>
+                    </div>
+                    <div class="product-image-right">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi5LXfdqT0FJZMzxWDkI6bGx7HxouEd9qgPOzzZQO4qAq1IUhc107PwnQN8ojrWpAp_CqfLtWNrlPClCuPyN6vCe_swUKOHlgmND_-Zl1GpPZ8A1OxndFAo78zxrRKKf5gfAwEKieLfMilNVRiyk6aHQnc4ypZygtjLDj_dtD6wCRHlPccUMGLv05fqywk/s1600/35709.jpg" alt="Lanche da Copa">
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="combos" class="category-section">
+            <h3 class="category-title">Combos</h3>
+            <div class="menu-grid">
+                
+                <div class="product-card" onclick="openProductDetails('Porção de Batata c/ Cheddar e Bacon', 'Porção generosa de batata frita bem crocante cobertas com queijo cheddar cremoso e muito bacon em cubos.', 35.90, 'Combos', 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhLuaZLFVt3i0wnoowC8CdFcYY4gywUeJ5KrH4B4sk2CqKXbTqoyR8vWdpStQOAw43TmALfGSHb0SCnLOnt98kKxnfw4MPsrLSf673icS3qJUPrrZS_yQlE8ylAZBUJv-FCQid35iwhdiACk5_ffzSji6z70lzE5i5grKLGCFkvNdOBQt-aLLrNX00bygo/s1600/35707.jpg')">
+                    <div class="product-info-left">
+                        <div class="product-name">Porção de Batata c/ Cheddar e Bacon</div>
+                        <div class="product-desc">Porção generosa de batata frita bem crocante cobertas com queijo cheddar cremoso e muito bacon em cubos.</div>
+                        <div class="product-price">R$ 35,90</div>
+                    </div>
+                    <div class="product-image-right">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhLuaZLFVt3i0wnoowC8CdFcYY4gywUeJ5KrH4B4sk2CqKXbTqoyR8vWdpStQOAw43TmALfGSHb0SCnLOnt98kKxnfw4MPsrLSf673icS3qJUPrrZS_yQlE8ylAZBUJv-FCQid35iwhdiACk5_ffzSji6z70lzE5i5grKLGCFkvNdOBQt-aLLrNX00bygo/s1600/35707.jpg" alt="Porção de Batata c/ Cheddar e Bacon">
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openProductDetails('Combo Batata + Refrigerante', 'Batata frita individual + Refrigerante em lata. Acompanha molho ranch (Grande).', 9.00, 'Combos', 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgfcMnAqmByRA3KwFmSERwmM0bGLkZ0iguy6tWGM6XRPLJbxe3MheuwgAhqVLJqkIsQmLOTzjtfitjdY4vq-FZmzmhp2CKsOM8hwyQU-LG-SwVl6fshoTFUdLby8eKdK4hhlpGzaH5FE8QUuwDuU2oXgYKyBdpJSGxLypxFYzl6rsKOWVp45ohXFlMvM0o/s1600/37146.jpg')">
+                    <div class="product-info-left">
+                        <div class="product-name">Combo Batata + Refrigerante</div>
+                        <div class="product-desc">Batata frita individual + Refrigerante em lata. Acompanha molho ranch (Grande).</div>
+                        <div class="product-price">R$ 9,00</div>
+                    </div>
+                    <div class="product-image-right">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgfcMnAqmByRA3KwFmSERwmM0bGLkZ0iguy6tWGM6XRPLJbxe3MheuwgAhqVLJqkIsQmLOTzjtfitjdY4vq-FZmzmhp2CKsOM8hwyQU-LG-SwVl6fshoTFUdLby8eKdK4hhlpGzaH5FE8QUuwDuU2oXgYKyBdpJSGxLypxFYzl6rsKOWVp45ohXFlMvM0o/s1600/37146.jpg" alt="Combo Batata + Refrigerante">
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openProductDetails('Batata Frita Individual', 'Batata frita crocante e sequinha. Acompanha molho ranch (Grande).', 6.00, 'Combos', 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhRVMW5Sih6h4jEnHE8NtLBSno5Ks6TuciV7JtGqZBdwjcqUcGgUVPxfOwMmWcsBfgdYgciNJ7COQ6pnjJsZB8kzwjisfgY7AFOEEC-83cBXHrcb-UoM0Ez-qx_sBDDNuXkxTKlj-qpac5YkBzE-f7mNZwh9EvWtNgzgNBityNswQpZLQkwFEhOArKWuKw/s1600/37152.jpg')">
+                    <div class="product-info-left">
+                        <div class="product-name">Batata Frita Individual</div>
+                        <div class="product-desc">Batata frita crocante e sequinha. Acompanha molho ranch (Grande).</div>
+                        <div class="product-price">R$ 6,00</div>
+                    </div>
+                    <div class="product-image-right">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhRVMW5Sih6h4jEnHE8NtLBSno5Ks6TuciV7JtGqZBdwjcqUcGgUVPxfOwMmWcsBfgdYgciNJ7COQ6pnjJsZB8kzwjisfgY7AFOEEC-83cBXHrcb-UoM0Ez-qx_sBDDNuXkxTKlj-qpac5YkBzE-f7mNZwh9EvWtNgzgNBityNswQpZLQkwFEhOArKWuKw/s1600/37152.jpg" alt="Batata Frita Individual">
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="refri" class="category-section">
+            <h3 class="category-title">Refri</h3>
+            <div class="menu-grid">
+                
+                <div class="product-card" onclick="openProductDetails('Refrigerante em Lata', 'Lata de 350ml (Coca-Cola Sabor Original ou similar disponível em estoque).', 6.00, 'Refri', 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=500')">
+                    <div class="product-info-left">
+                        <div class="product-name">Refrigerante em Lata</div>
+                        <div class="product-desc">Lata de 350ml (Coca-Cola Sabor Original ou similar disponível em estoque).</div>
+                        <div class="product-price">R$ 6,00</div>
+                    </div>
+                    <div class="product-image-right">
+                        <img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=500" alt="Refrigerante em Lata">
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- MODAL: Detalhes Completos do Produto -->
+    <div class="modal" id="productDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="detailsTitle">Nome do Produto</h3>
+                <span class="close-modal" onclick="toggleDetailsModal(false)">Fechar</span>
+            </div>
+            <img src="" alt="Imagem do Produto" class="modal-banner-image" id="detailsImage">
+            
+            <p class="details-desc" id="detailsDescription">Descrição completa aqui...</p>
+            <div class="details-price" id="detailsPrice">R$ 0,00</div>
+            <button class="btn-checkout" id="detailsAddBtn">Adicionar à sacola</button>
+        </div>
+    </div>
+
+    <!-- Barra Flutuante da Sacola -->
+    <div class="cart-float" id="cartFloat" style="display: none;">
+        <div class="cart-info-text">
+            <span id="cartCount">0</span>
+            <strong>Total: R$ <span id="cartTotalFloat">0,00</span></strong>
+        </div>
+        <button class="btn-view-cart" onclick="toggleModal(true)">Ver sacola</button>
+    </div>
+
+    <!-- Modal da Sacola de Compras -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Sua sacola</h3>
+                <span class="close-modal" onclick="toggleModal(false)">Fechar</span>
+            </div>
+
+            <div id="cartItemsContainer"></div>
+
+            <div class="form-group">
+                <label for="clientName">Seu Nome Completo:</label>
+                <input type="text" id="clientName" placeholder="Ex: João Silva">
+            </div>
+
+            <div class="form-group">
+                <label for="clientAddress">Endereço Completo de Entrega:</label>
+                <textarea id="clientAddress" rows="3" placeholder="Rua, número, bairro e pontos de referência..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Forma de Pagamento:</label>
+                <div class="payment-options">
+                    <div class="payment-btn" id="payPix" onclick="selectPayment('Pix')">Pix</div>
+                    <div class="payment-btn" id="payCard" onclick="selectPayment('Cartão')">Cartão</div>
+                    <div class="payment-btn" id="payCash" onclick="selectPayment('Dinheiro')">Dinheiro</div>
+                </div>
+            </div>
+
+            <div class="change-container" id="changeSection" style="display: none;">
+                <label style="font-size: 0.85rem; color: #aaaaaa; font-weight: 600; display: block; margin-bottom: 6px;">Precisa de Troco?</label>
+                <div class="change-options">
+                    <label><input type="radio" name="needChange" value="Não" checked onclick="toggleChangeInput(false)"> Não</label>
+                    <label><input type="radio" name="needChange" value="Sim" onclick="toggleChangeInput(true)"> Sim</label>
+                </div>
+                <div id="changeValueField" style="display: none; margin-top: 8px;">
+                    <input type="text" id="changeValue" placeholder="Troco para quanto? Ex: R$ 50,00">
+                </div>
+            </div>
+
+            <div class="cart-summary-line" style="margin-top: 20px;">
+                <span>Subtotal dos itens:</span>
+                <span>R$ <span id="modalSubtotal">0,00</span></span>
+            </div>
+            
+            <div class="cart-summary-line">
+                <span>Taxa de entrega:</span>
+                <span>R$ 6,00</span>
+            </div>
+
+            <div class="cart-total-section">
+                <span>Total Geral:</span>
+                <span>R$ <span id="modalTotal">0,00</span></span>
+            </div>
+            
+            <p style="font-size: 0.85rem; color: #bca158; margin-top: 8px; text-align: right; font-weight: 500;">⏱️ Tempo de espera estimado: 40 minutos</p>
+
+            <button class="btn-checkout" onclick="sendWhatsApp()">
+                Confirmar e enviar pedido
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+        let selectedPaymentMethod = '';
+        const deliveryFee = 6.00;
+
+        function setActiveTab(element) {
+            document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        function openProductDetails(name, desc, price, category, imageUrl) {
+            document.getElementById('detailsTitle').innerText = name;
+            document.getElementById('detailsDescription').innerText = desc;
+            document.getElementById('detailsPrice').innerText = 'R$ ' + price.toFixed(2).replace('.', ',');
+            
+            const modalImg = document.getElementById('detailsImage');
+            modalImg.src = imageUrl;
+            modalImg.alt = name;
+            
+            const addBtn = document.getElementById('detailsAddBtn');
+            addBtn.onclick = function() {
+                addItem(name, price, category);
+                toggleDetailsModal(false);
+            };
+            
+            toggleDetailsModal(true);
+        }
+
+        function toggleDetailsModal(show) {
+            document.getElementById('productDetailsModal').style.display = show ? 'flex' : 'none';
+        }
+
+        function addItem(name, price, category) {
+            const index = cart.findIndex(item => item.name === name);
+            if (index > -1) {
+                cart[index].qty += 1;
+            } else {
+                cart.push({ name, price, category, qty: 1 });
+            }
+            updateCart();
+        }
+
+        function changeQty(name, amount) {
+            const index = cart.findIndex(item => item.name === name);
+            if (index > -1) {
+                cart[index].qty += amount;
+                if (cart[index].qty <= 0) {
+                    cart.splice(index, 1);
+                }
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            const container = document.getElementById('cartItemsContainer');
+            container.innerHTML = '';
+            
+            let subtotal = 0;
+            let count = 0;
+
+            if (cart.length === 0) {
+                document.getElementById('cartFloat').style.display = 'none';
+                document.getElementById('cartModal').style.display = 'none';
+                return;
+            }
+
+            const categories = ['Hambúrgueres', 'Combos', 'Refri'];
+            
+            categories.forEach(cat => {
+                const itemsInCat = cart.filter(item => item.category === cat);
+                
+                if (itemsInCat.length > 0) {
+                    let catHtml = `<div class="cart-category-group">
+                        <div class="cart-category-name">${cat}</div>`;
+                    
+                    itemsInCat.forEach(item => {
+                        const itemTotal = item.price * item.qty;
+                        subtotal += itemTotal;
+                        count += item.qty;
+
+                        catHtml += `
+                            <div class="cart-item">
+                                <div class="cart-item-info">
+                                    <h4>${item.name}</h4>
+                                    <span>R$ ${item.price.toFixed(2).replace('.', ',')}</span>
+                                </div>
+                                <div class="quantity-control">
+                                    <button class="btn-qty" onclick="changeQty('${item.name}', -1)">-</button>
+                                    <span>${item.qty}</span>
+                                    <button class="btn-qty" onclick="changeQty('${item.name}', 1)">+</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    catHtml += `</div>`;
+                    container.innerHTML += catHtml;
+                }
+            });
+
+            let totalGeral = subtotal + deliveryFee;
+
+            document.getElementById('cartFloat').style.display = 'flex';
+            document.getElementById('cartCount').innerText = count + (count === 1 ? ' item' : ' itens');
+            document.getElementById('cartTotalFloat').innerText = totalGeral.toFixed(2).replace('.', ',');
+            document.getElementById('modalSubtotal').innerText = subtotal.toFixed(2).replace('.', ',');
+            document.getElementById('modalTotal').innerText = totalGeral.toFixed(2).replace('.', ',');
+        }
+
+        function toggleModal(show) {
+            document.getElementById('cartModal').style.display = show ? 'flex' : 'none';
+        }
+
+        function selectPayment(method) {
+            selectedPaymentMethod = method;
+            document.querySelectorAll('.payment-btn').forEach(btn => btn.classList.remove('selected'));
+            
+            if(method === 'Pix') document.getElementById('payPix').classList.add('selected');
+            if(method === 'Cartão') document.getElementById('payCard').classList.add('selected');
+            if(method === 'Dinheiro') document.getElementById('payCash').classList.add('selected');
+
+            const changeSection = document.getElementById('changeSection');
+            if (method === 'Dinheiro') {
+                changeSection.style.display = 'block';
+            } else {
+                changeSection.style.display = 'none';
+                toggleChangeInput(false);
+                document.querySelector('input[name="needChange"][value="Não"]').checked = true;
+            }
+        }
+
+        function toggleChangeInput(show) {
+            document.getElementById('changeValueField').style.display = show ? 'block' : 'none';
+            if(!show) {
+                document.getElementById('changeValue').value = '';
+            }
+        }
+
+        function sendWhatsApp() {
+            const name = document.getElementById('clientName').value.trim();
+            const address = document.getElementById('clientAddress').value.trim();
+
+            if (!name) { alert('Por favor, informe seu nome.'); return; }
+            if (!address) { alert('Por favor, informe seu endereço completo.'); return; }
+            if (!selectedPaymentMethod) { alert('Por favor, selecione uma forma de pagamento.'); return; }
+
+            let changeText = '';
+            if (selectedPaymentMethod === 'Dinheiro') {
+                const needChangeRadio = document.querySelector('input[name="needChange"]:checked').value;
+                if (needChangeRadio === 'Sim') {
+                    const value = document.getElementById('changeValue').value.trim();
+                    if (!value) { alert('Por favor, informe o valor para o troco.'); return; }
+                    changeText = ` (Troco para: ${value})`;
+                } else {
+                    changeText = ` (Não precisa de troco)`;
+                }
+            }
+
+            const orderNum = Math.floor(1000 + Math.random() * 9000);
+
+            let message = `🧾 *CUPOM DE PEDIDO #${orderNum}* 🧾\n`;
+            message += `-------------------------------------------\n`;
+            message += `🍔 *PR BURGUER NA BRASA*\n`;
+            message += `-------------------------------------------\n\n`;
+            message += `👤 *CLIENTE:* ${name}\n`;
+            message += `📍 *ENDEREÇO:* ${address}\n\n`;
+            message += `💳 *PAGAMENTO:* ${selectedPaymentMethod}${changeText}\n`;
+            message += `-------------------------------------------\n`;
+            message += `📝 *ITENS DO PEDIDO*:\n\n`;
+
+            const categories = ['Hambúrgueres', 'Combos', 'Refri'];
+            let subtotal = 0;
+
+            categories.forEach(cat => {
+                const itemsInCat = cart.filter(item => item.category === cat);
+                if (itemsInCat.length > 0) {
+                    message += `*--- ${cat.toUpperCase()} ---*\n`;
+                    itemsInCat.forEach(item => {
+                        const itemTotal = item.price * item.qty;
+                        subtotal += itemTotal;
+                        message += `▪️ ${item.qty}x ${item.name}\n   (R$ ${item.price.toFixed(2).replace('.', ',')} un.)\n`;
+                    });
+                    message += `\n`;
+                }
+            });
+
+            let totalFinal = subtotal + deliveryFee;
+
+            message += `-------------------------------------------\n`;
+            message += `💰 *SUBTOTAL:* R$ ${subtotal.toFixed(2).replace('.', ',')}\n`;
+            message += `🚚 *TAXA DE ENTREGA:* R$ ${deliveryFee.toFixed(2).replace('.', ',')}\n`;
+            message += `⭐ *TOTAL GERAL:* R$ ${totalFinal.toFixed(2).replace('.', ',')}\n`;
+            message += `-------------------------------------------\n`;
+            message += `⏱️ *Tempo de espera: 40 minutos (podendo ser entregue antes)*\n\n`;
+            message += `🕒 _Obrigado pela preferência!_`;
+
+            const phone = "5519920124303";
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`, '_blank');
+        }
+    </script>
+</body>
+</html>
