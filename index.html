@@ -1484,26 +1484,12 @@
             container.innerHTML = positions.map(position => `
                 <div class="form-group" style="margin-top:10px;">
                     <label for="${prefix}_sauce_${position.key}">${position.label}:</label>
-                    <select id="${prefix}_sauce_${position.key}" onchange="updateSauceSelectOptions('${containerId}')">
+                    <select id="${prefix}_sauce_${position.key}">
                         <option value="">Não escolher</option>
                         ${availableSauces.map(sauce => `<option value="${sauce}">${sauce}</option>`).join('')}
                     </select>
                 </div>
             `).join('');
-            updateSauceSelectOptions(containerId);
-        }
-
-        function updateSauceSelectOptions(containerId) {
-            const selects = Array.from(document.querySelectorAll(`#${containerId} select`));
-            selects.forEach(current => {
-                const selectedElsewhere = selects
-                    .filter(other => other !== current)
-                    .map(other => other.value)
-                    .filter(Boolean);
-                Array.from(current.options).forEach(option => {
-                    option.disabled = !!option.value && selectedElsewhere.includes(option.value);
-                });
-            });
         }
 
         function getSelectedSauces(containerId) {
