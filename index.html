@@ -71,7 +71,7 @@
 
         .merchant-cover {
             height: 140px;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjFMPZdTHRzkRixX-NAJzjmrUrkrxaoVfgWDfD17VF6-gQ3i83-lSgFMcAkNLCng1geD0qdK59AaeMvLJtDRdeSqPGLKxWfyPGtq67onY95aOnUGoedQKehiremi_o7LD8MFtMNI24Rxf4Ij84Edn1cDh4c63VRdraYuAn03n5sFVNw6Jp-YxKXCOleV-A/s1600/37172.png') no-repeat center center;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6VnWbqiA2FIiO4ICBLFQH3inD8TM6nqAhLZVl-Pz8LmXHuxG5NlYiPPJua4xc_w2fKIScIiosiETSPedsAjWgEP__eINIhojsGTKIVuq_nBt5I_j2rsL9LKq-7yOvqThmUj58KzMEXLArJMUhxOr0nE08dypl5hNus5j_zXnGL7ORAXoknc-zJgW8HYg/s1600/398717.jpg') no-repeat center center;
             background-size: cover;
         }
 
@@ -623,6 +623,24 @@
             border-color: #c5a85c;
             background-color: #231f16;
             color: #c5a85c;
+        }
+
+        #payPix {
+            background-color: #176d39;
+            border-color: #218c4b;
+            color: #ffffff;
+        }
+        #payPix.selected {
+            background-color: #20a052;
+            border-color: #39c76d;
+            color: #ffffff;
+        }
+        #payPix small {
+            display: block;
+            margin-top: 3px;
+            font-size: 0.67rem;
+            line-height: 1.15;
+            font-weight: 500;
         }
 
         .fulfillment-options {
@@ -1214,18 +1232,23 @@
             </div>
             <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjdgzl1E0zWjFGTGEaFzjgwiSVr1Rxr-YGPxuTSJ8MaM-UJRkH-hSZUBWA6UWBN5kz36vqS5w1G0ewzH2_d1Yr1JH2pGT7HPc1TpImFTK-hUODPItW-pyrFX3jrSjvJ6QfvO6lktiO1Er5O2jfA7lymTg147WiFvNI2NQklE-yW_Ckt86mG1tvKU_3sLwM/s1600/110117.jpg" alt="Combo Casal" class="modal-banner-image">
             <p class="details-desc" style="margin-bottom:10px;">Preencha os itens abaixo. <strong>Ao escolher 2 hambúrgueres + 2 batatas + 2 refrigerantes, você ganha 10% de desconto automático no combo!</strong></p>
-            <div class="combo-options-title">🥣 Escolha os molhos por posição (opcional)</div>
-            <div id="comboCasalSaucesList" style="margin-bottom:14px;"></div>
-            <div class="combo-options-title">🍔 Escolha seus Hambúrgueres</div>
-            <div class="combo-grid">
-                <div class="form-group" style="margin-top:0;">
-                    <label for="comboBurger1">1º Hambúrguer:</label>
-                    <select id="comboBurger1" onchange="calculateComboPrice()"></select>
-                </div>
-                <div class="form-group" style="margin-top:0;">
-                    <label for="comboBurger2">2º Hambúrguer (Opcional):</label>
-                    <select id="comboBurger2" onchange="calculateComboPrice()"></select>
-                </div>
+            <div class="combo-options-title">🍔 1. Escolha o primeiro hambúrguer</div>
+            <div class="form-group" style="margin-top:0;">
+                <label for="comboBurger1">1º Hambúrguer:</label>
+                <select id="comboBurger1" onchange="handleComboBurgerSelectionChange(1)"></select>
+            </div>
+            <div style="margin:10px 0 16px; padding:10px; border:1px solid #333; border-radius:8px;">
+                <div class="addons-section-title" id="comboBurger1SauceTitle" style="margin-top:0;">Molhos do 1º hambúrguer</div>
+                <div id="comboBurger1SaucesList"></div>
+            </div>
+            <div class="combo-options-title">🍔 2. Escolha o segundo hambúrguer</div>
+            <div class="form-group" style="margin-top:0;">
+                <label for="comboBurger2">2º Hambúrguer (Opcional):</label>
+                <select id="comboBurger2" onchange="handleComboBurgerSelectionChange(2)"></select>
+            </div>
+            <div id="comboBurger2SauceSection" style="margin:10px 0 16px; padding:10px; border:1px solid #333; border-radius:8px;">
+                <div class="addons-section-title" id="comboBurger2SauceTitle" style="margin-top:0;">Molhos do 2º hambúrguer</div>
+                <div id="comboBurger2SaucesList"></div>
             </div>
             <div class="combo-options-title">🍟 Quantidade de Batata Individual (R$ 9,00 un.)</div>
             <div class="form-group" style="margin-top:0;">
@@ -1253,6 +1276,12 @@
                         <option>Fanta Maracujá</option>
                         <option>Guaraná</option>
                     </select>
+                    <label for="comboSodaType1" style="display:block; margin-top:8px;">Versão do 1º refrigerante:</label>
+                    <select id="comboSodaType1" onchange="calculateComboPrice()">
+                        <option value="">Normal ou Zero?</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Zero">Zero</option>
+                    </select>
                 </div>
                 <div class="form-group" id="comboSodaFlavorRow2" style="margin-top:10px;">
                     <label for="comboSodaFlavor2">Sabor do 2º refrigerante:</label>
@@ -1264,6 +1293,12 @@
                         <option>Pepsi</option>
                         <option>Fanta Maracujá</option>
                         <option>Guaraná</option>
+                    </select>
+                    <label for="comboSodaType2" style="display:block; margin-top:8px;">Versão do 2º refrigerante:</label>
+                    <select id="comboSodaType2" onchange="calculateComboPrice()">
+                        <option value="">Normal ou Zero?</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Zero">Zero</option>
                     </select>
                 </div>
             </div>
@@ -1381,7 +1416,7 @@
             <div class="form-group">
                 <label>Forma de Pagamento:</label>
                 <div class="payment-options">
-                    <div class="payment-btn" id="payPix" onclick="selectPayment('Pix')">Pix</div>
+                    <div class="payment-btn" id="payPix" onclick="selectPayment('Pix')">Pix<small>Entrega mais rápida</small></div>
                     <div class="payment-btn" id="payCard" onclick="selectPayment('Cartão de Crédito')">Cartão de Crédito</div>
                     <div class="payment-btn" id="payCash" onclick="selectPayment('Dinheiro')">Dinheiro</div>
                 </div>
@@ -1474,31 +1509,37 @@
             "Sweet Chilli 🌶️"
         ];
 
-        function renderSauceChoices(containerId, prefix) {
+        function renderSauceChoices(containerId, prefix, mode = 'burger') {
             const container = document.getElementById(containerId);
-            const positions = [
-                { key: 'base', label: '1. Molho da base do hambúrguer' },
-                { key: 'finish', label: '2. Molho da tampa (finalização)' },
-                { key: 'cup', label: '3. Molho no pote' }
-            ];
+            const positions = mode === 'accompaniment'
+                ? [
+                    { key: 'accompaniment1', label: 'Escolha o 1º molho para acompanhar' },
+                    { key: 'accompaniment2', label: 'Escolha o 2º molho para acompanhar' }
+                ]
+                : [
+                    { key: 'base', label: '1. Molho da base do hambúrguer' },
+                    { key: 'finish', label: '2. Molho da tampa (finalização)' },
+                    { key: 'cup', label: '3. Molho no pote' }
+                ];
             container.innerHTML = positions.map(position => `
                 <div class="form-group" style="margin-top:10px;">
                     <label for="${prefix}_sauce_${position.key}">${position.label}:</label>
                     <select id="${prefix}_sauce_${position.key}">
-                        <option value="">Não escolher</option>
+                        <option value="">Escolha um molho</option>
                         ${availableSauces.map(sauce => `<option value="${sauce}">${sauce}</option>`).join('')}
                     </select>
                 </div>
             `).join('');
         }
 
-        function getSelectedSauces(containerId) {
-            const getValue = position => document.getElementById(`${containerId === 'productSaucesList' ? 'product' : 'couple'}_sauce_${position}`).value;
-            const sauces = {
-                base: getValue('base'),
-                finish: getValue('finish'),
-                cup: getValue('cup')
-            };
+        function getSelectedSauces(prefix, mode = 'burger') {
+            const positions = mode === 'accompaniment'
+                ? ['accompaniment1', 'accompaniment2']
+                : ['base', 'finish', 'cup'];
+            const sauces = {};
+            positions.forEach(position => {
+                sauces[position] = document.getElementById(`${prefix}_sauce_${position}`).value;
+            });
             return Object.values(sauces).some(Boolean) ? sauces : null;
         }
 
@@ -1507,7 +1548,9 @@
             return [
                 ['Base', sauces.base],
                 ['Finalização', sauces.finish],
-                ['Pote', sauces.cup]
+                ['Pote', sauces.cup],
+                ['Acompanhamento 1', sauces.accompaniment1],
+                ['Acompanhamento 2', sauces.accompaniment2]
             ].filter(([, sauce]) => !!sauce).map(([label, sauce]) => `${label}: ${sauce}`).join(' | ');
         }
 
@@ -1647,9 +1690,14 @@
             const productSaucesContainer = document.getElementById('productSaucesContainer');
             const productSaucesList = document.getElementById('productSaucesList');
             const canChooseSauces = category === 'Hambúrgueres' || category === 'Combos';
+            const isPotatoBaconPortion = name === 'Porção de Batata c/ Queijo Prato e bacon 400g';
+            const sauceMode = isPotatoBaconPortion ? 'accompaniment' : 'burger';
             productSaucesContainer.style.display = canChooseSauces ? 'block' : 'none';
+            productSaucesContainer.querySelector('.addons-section-title').innerText = isPotatoBaconPortion
+                ? '🥣 Escolha 2 molhos para acompanhar'
+                : '🥣 Escolha os molhos por posição (opcional)';
             productSaucesList.innerHTML = '';
-            if (canChooseSauces) renderSauceChoices('productSaucesList', 'product');
+            if (canChooseSauces) renderSauceChoices('productSaucesList', 'product', sauceMode);
             burgerComboOptionsOpen = false;
             burgerComboSelectionActive = false;
             comboOptions.style.display = 'none';
@@ -1713,8 +1761,12 @@
                     comboChoice = { side, soda, sodaType };
                 }
                 const selectedSauces = (category === 'Hambúrgueres' || category === 'Combos')
-                    ? getSelectedSauces('productSaucesList')
-                    : [];
+                    ? getSelectedSauces('product', sauceMode)
+                    : null;
+                if (isPotatoBaconPortion && (!selectedSauces || !selectedSauces.accompaniment1 || !selectedSauces.accompaniment2)) {
+                    alert('Escolha os 2 molhos para acompanhar a porção. Você pode repetir o mesmo molho.');
+                    return;
+                }
                 addItemWithAddons(name, price, category, selectedAddons, comboChoice, selectedSauces);
                 toggleDetailsModal(false);
             };
@@ -1820,8 +1872,24 @@
             updateCart();
         }
 
+        function updateComboBurgerSauceTitles() {
+            const b1Name = document.getElementById('comboBurger1').value;
+            const b2Name = document.getElementById('comboBurger2').value;
+            document.getElementById('comboBurger1SauceTitle').innerText = `Molhos do 1º hambúrguer: ${b1Name}`;
+            document.getElementById('comboBurger2SauceTitle').innerText = b2Name === 'Nenhum'
+                ? 'Molhos do 2º hambúrguer'
+                : `Molhos do 2º hambúrguer: ${b2Name}`;
+            document.getElementById('comboBurger2SauceSection').style.display = b2Name === 'Nenhum' ? 'none' : 'block';
+        }
+
+        function handleComboBurgerSelectionChange(which) {
+            if (which === 1) renderSauceChoices('comboBurger1SaucesList', 'couple1');
+            if (which === 2) renderSauceChoices('comboBurger2SaucesList', 'couple2');
+            updateComboBurgerSauceTitles();
+            calculateComboPrice();
+        }
+
         function openComboCasalDetails() {
-            renderSauceChoices('comboCasalSaucesList', 'couple');
             const b1Select = document.getElementById('comboBurger1');
             const b2Select = document.getElementById('comboBurger2');
             b1Select.innerHTML = '';
@@ -1848,8 +1916,13 @@
 
             b1Select.selectedIndex = 1; 
             b2Select.selectedIndex = 4; 
+            renderSauceChoices('comboBurger1SaucesList', 'couple1');
+            renderSauceChoices('comboBurger2SaucesList', 'couple2');
+            updateComboBurgerSauceTitles();
             document.getElementById('comboSodaFlavor1').value = '';
             document.getElementById('comboSodaFlavor2').value = '';
+            document.getElementById('comboSodaType1').value = '';
+            document.getElementById('comboSodaType2').value = '';
             handleComboSodaQtyChange();
             calculateComboPrice();
             toggleComboCasalModal(true);
@@ -1863,7 +1936,10 @@
             const quantity = parseInt(document.getElementById('comboSodaQty').value, 10);
             const secondFlavorRow = document.getElementById('comboSodaFlavorRow2');
             secondFlavorRow.style.display = quantity === 2 ? 'block' : 'none';
-            if (quantity === 1) document.getElementById('comboSodaFlavor2').value = '';
+            if (quantity === 1) {
+                document.getElementById('comboSodaFlavor2').value = '';
+                document.getElementById('comboSodaType2').value = '';
+            }
             calculateComboPrice();
         }
 
@@ -1910,19 +1986,25 @@
             const potQty = parseInt(document.getElementById('comboPotatoQty').value);
             const sodQty = parseInt(document.getElementById('comboSodaQty').value);
             const sodaFlavors = [document.getElementById('comboSodaFlavor1').value];
-            if (sodQty === 2) sodaFlavors.push(document.getElementById('comboSodaFlavor2').value);
-            if (sodaFlavors.some(flavor => !flavor)) {
-                alert('Escolha o sabor de cada refrigerante do Combo Casal.');
+            const sodaTypes = [document.getElementById('comboSodaType1').value];
+            if (sodQty === 2) {
+                sodaFlavors.push(document.getElementById('comboSodaFlavor2').value);
+                sodaTypes.push(document.getElementById('comboSodaType2').value);
+            }
+            if (sodaFlavors.some(flavor => !flavor) || sodaTypes.some(type => !type)) {
+                alert('Escolha o sabor e a versão normal ou zero de cada refrigerante do Combo Casal.');
                 return;
             }
             const calculated = calculateComboPrice();
 
             const burgersText = b2Name === "Nenhum" ? b1Name : `${b1Name} + ${b2Name}`;
-            const sodaFlavorText = sodaFlavors.join(' + ');
-            const selectedSauces = getSelectedSauces('comboCasalSaucesList');
-            const sauceSummary = formatSauceSelection(selectedSauces);
-            const sauceText = sauceSummary ? ` - Molhos: ${sauceSummary}` : '';
-            const comboId = `Combo Casal [${burgersText}] - ${potQty} batata(s) - ${sodaFlavorText}${sauceText}`;
+            const sodaFlavorText = sodaFlavors.map((flavor, index) => `${flavor} (${sodaTypes[index]})`).join(' + ');
+            const burger1Sauces = getSelectedSauces('couple1');
+            const burger2Sauces = b2Name === 'Nenhum' ? null : getSelectedSauces('couple2');
+            const sauceText1 = formatSauceSelection(burger1Sauces);
+            const sauceText2 = formatSauceSelection(burger2Sauces);
+            const sauceText = [sauceText1 ? `Molhos 1º hambúrguer: ${sauceText1}` : '', sauceText2 ? `Molhos 2º hambúrguer: ${sauceText2}` : ''].filter(Boolean).join(' | ');
+            const comboId = `Combo Casal [${burgersText}] - ${potQty} batata(s) - ${sodaFlavorText}${sauceText ? ` - ${sauceText}` : ''}`;
 
             cart.push({
                 name: comboId,
@@ -1936,7 +2018,8 @@
                     potatoes: potQty,
                     sodas: sodQty,
                     sodaFlavors,
-                    sauces: selectedSauces,
+                    sodaTypes,
+                    burgerSauces: { first: burger1Sauces, second: burger2Sauces },
                     discountApplied: calculated.earnsDiscount,
                     discountValue: calculated.discountValue
                 }
@@ -1990,9 +2073,10 @@
                         let displayName = item.name;
                         if(item.isComboCasal) {
                             const secondBurgerText = item.details.burger2 === "Nenhum" ? "Dispensado" : item.details.burger2;
-                            const sodaDetail = (item.details.sodaFlavors || []).map((flavor, i) => `${i + 1}º refri: ${flavor}`).join(', ');
-                            const sauceSummary = formatSauceSelection(item.details.sauces);
-                            const saucesDetail = sauceSummary ? `<br>- ${sauceSummary}` : '';
+                            const sodaDetail = (item.details.sodaFlavors || []).map((flavor, i) => `${i + 1}º refri: ${flavor} (${(item.details.sodaTypes || [])[i] || 'Normal'})`).join(', ');
+                            const firstSauces = formatSauceSelection(item.details.burgerSauces && item.details.burgerSauces.first);
+                            const secondSauces = formatSauceSelection(item.details.burgerSauces && item.details.burgerSauces.second);
+                            const saucesDetail = [firstSauces ? `Molhos do 1º hambúrguer: ${firstSauces}` : '', secondSauces ? `Molhos do 2º hambúrguer: ${secondSauces}` : ''].filter(Boolean).map(line => `<br>- ${line}`).join('');
                             displayName = `❤️ Combo Casal:<br><span style="font-size:0.8rem; color:#aaa; font-weight:normal;">- 1º Lanche: ${item.details.burger1}<br>- 2º Lanche: ${secondBurgerText}<br>- ${item.details.potatoes} Batata(s)<br>- ${sodaDetail}${saucesDetail}<br>${item.details.discountApplied ? `<b style="color:#2ec4b6;">(Desconto de 10%: R$ ${item.details.discountValue.toFixed(2).replace('.', ',')})</b>` : ''}</span>`;
                         } else if (item.isLancheCustom) {
                             const comboText = item.comboDetails
@@ -2166,9 +2250,11 @@
                         if(item.isComboCasal) {
                             const secondBurgerText = item.details.burger2 === "Nenhum" ? "Dispensado" : item.details.burger2;
                             message += `▪️ ${item.qty}x Combo Casal ❤️\n   • Lanche 1: ${item.details.burger1}\n   • Lanche 2: ${secondBurgerText}\n   • Batatas: ${item.details.potatoes}\n`;
-                            (item.details.sodaFlavors || []).forEach((flavor, i) => { message += `   • Refrigerante ${i + 1}: ${flavor}\n`; });
-                            const sauceSummary = formatSauceSelection(item.details.sauces);
-                            if (sauceSummary) message += `   • Molhos: ${sauceSummary}\n`;
+                            (item.details.sodaFlavors || []).forEach((flavor, i) => { message += `   • Refrigerante ${i + 1}: ${flavor} (${(item.details.sodaTypes || [])[i] || 'Normal'})\n`; });
+                            const firstSauces = formatSauceSelection(item.details.burgerSauces && item.details.burgerSauces.first);
+                            const secondSauces = formatSauceSelection(item.details.burgerSauces && item.details.burgerSauces.second);
+                            if (firstSauces) message += `   • Molhos do 1º hambúrguer: ${firstSauces}\n`;
+                            if (secondSauces) message += `   • Molhos do 2º hambúrguer: ${secondSauces}\n`;
                             if (item.details.discountApplied) message += `   • Desconto de 10%: - R$ ${item.details.discountValue.toFixed(2).replace('.', ',')}\n`;
                             message += `   (R$ ${item.price.toFixed(2).replace('.', ',')} total)\n`;
                         } else if (item.isLancheCustom) {
